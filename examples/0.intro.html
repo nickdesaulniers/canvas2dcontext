@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <title>0.intro</title>
+  <style>
+    canvas {
+      border: 1px solid #CCC;
+      box-shadow: 3px 5px 5px #CCC;
+    }
+    img {
+      border: 2px solid red;
+    }
+  </style>
+  <script>
+    function demo () {
+      var canvas = document.getElementsByTagName('canvas')[0];
+      console.log(canvas);
+      console.log(canvas.width);
+      console.log(canvas.height);
+      
+      /*
+      Contexts can either be '2d' or '3d', case sensitive.  The
+      context is where all of the methods we will use reside.
+      */
+      var context = canvas.getContext('2d');
+      
+      var format = 'image/png';
+      var quality = 0.75;
+      var dataURL = canvas.toDataURL(format, quality)
+      buildImageFromDataUrl(dataURL);
+      
+      // We can even have canvases in memory, not drawn to screen.
+      var inMemoryCanvas = document.createElement('canvas');
+      inMemoryCanvas.width = 500;
+      inMemoryCanvas.height = 400;
+      buildImageFromDataUrl(inMemoryCanvas.toDataURL(format, quality));
+    }
+    /*
+    This function just shows how we can use base64 encoded strings
+    to represent images.
+    */
+    function buildImageFromDataUrl (dataURL) {
+      var image = new Image();
+      image.src = dataURL;
+      document.body.appendChild(image);
+    }
+    window.addEventListener('DOMContentLoaded', demo);
+  </script>
+</head>
+<body>
+  <!--
+  For the canvas element, you should provide the width and height
+  attributes on the canvas tag itself.  You should not put units
+  as per the html5 spec, but browsers are forgiving.  If not
+  specified on the tag, the default dimensions are 300px x 150px.
+  Do not use CSS to set the width and height attributes of the
+  canvas elements.  This will change the element size, but scale
+  the drawing surface size, which is probably not what you want.
+  -->
+  <canvas width="400" height="300">
+    This text will only be displayed if your browser does not
+    support html5 canvas.
+  </canvas>
+</body>
+</html>
