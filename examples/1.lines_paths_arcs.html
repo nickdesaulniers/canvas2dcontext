@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+  <title>1.lines_paths_arcs</title>
+  <script>
+    function draw () {
+      var canvas = document.createElement('canvas'),
+        context = canvas.getContext('2d');
+      
+      canvas.width = 1024;
+      canvas.height = 512;
+      
+      n(context);
+      i(context);
+      c(context);
+      k(context);
+      
+      document.body.appendChild(canvas);
+    }
+    
+    /*
+    Paths are invisible until filled or stroked.  These four method calls are
+    the way we draw paths.
+    
+    context.beginPath();
+    context.moveTo(x1, y1);
+    context.lineTo(x2, y2);
+    context.stroke();
+    */
+    function drawPath (context, points) {
+      context.beginPath(); // reset the current path
+      context.moveTo(points[0][0], points[0][1]); // lift the pen
+      for (var i = 1;i < points.length;i++) {
+        context.lineTo(points[i][0], points[i][1]); // draw (invisble)
+      }
+      context.stroke(); // stroke the outline of the current path
+    }
+    // Drawing paths.
+    function n (context) {
+      // The origin of a context is the top left corner.
+      var points = [[100, 300],[100, 100],[200, 300],[200, 100]];
+      drawPath(context, points);
+    }
+    // Drawing circles.
+    function i (context) {
+      var center_x = 300,
+        center_y = 125,
+        radius = 25,
+        start_angle = 0,
+        end_angle = 2 * Math.PI,
+        counter_clockwise = false;
+      // Draw the stem of an 'i'.
+      drawPath(context, [[300, 300], [300, 200]]);
+      // Draw the dot of an 'i', which is a circle.
+      context.beginPath(); // otherwise we get a line from the stem
+      context.arc(center_x, center_y, radius, start_angle, end_angle,
+        counter_clockwise);
+      context.stroke();
+      /*
+      Note we can also draw quadratic and bezier curves with
+      context.quadraticCurveTo(control_x, control_y, end_x, end_y)
+      and
+      context.bezierCurveTo(control_x1, control_y1, control_x2, control_y2,
+        end_x, end_y);
+      
+      context.arcTo(control_x, control_y, end_x, end_y, radius);
+      can also be used for arcs.
+      
+      Also, for more info on the clockwise argument for arc, look up
+      nonzero winding rule for filling paths to perform cutouts.
+      */
+    }
+    function c (context) {
+      var center_x = 400,
+        center_y = 250,
+        radius = 50,
+        start_angle = 7 * Math.PI / 4,
+        end_angle = Math.PI / 4,
+        counter_clockwise = true;
+      context.beginPath();
+      context.arc(center_x, center_y, radius, start_angle, end_angle,
+        counter_clockwise);
+      context.stroke();
+    }
+    function k (context) {
+      drawPath(context, [[500, 300], [500, 100]]);
+      drawPath(context, [[600, 150], [500, 225], [600, 300]]);
+    }
+    window.addEventListener('DOMContentLoaded', draw);
+  </script>
+  <style>
+    canvas {
+      border: 1px solid #CCC;
+      box-shadow: 3px 5px 5px #CCC;
+    }
+  </style>
+</head>
+<body></body>
+</html>
