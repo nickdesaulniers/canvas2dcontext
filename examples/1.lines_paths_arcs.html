@@ -83,8 +83,26 @@
       context.stroke();
     }
     function k (context) {
-      drawPath(context, [[500, 300], [500, 100]]);
-      drawPath(context, [[600, 150], [500, 225], [600, 300]]);
+      var rect = {
+        x: 500,
+        y: 100,
+        w: 20,
+        h: 200
+      };
+      
+      // Drawing rectangles.
+      context.strokeRect(rect.x, rect.y, rect.w, rect.h);
+      // context.fillRect to fill instead of stroke
+      
+      var x = rect.x + rect.w, y = rect.y + 5 * rect.h / 8;
+      // Drawing polygons
+      context.beginPath();
+      context.moveTo(x, y);
+      context.lineTo(600, 150);
+      context.lineTo(600, 300);
+      context.lineTo(x, y);
+      context.closePath();
+      context.stroke();
     }
     window.addEventListener('DOMContentLoaded', draw);
   </script>
