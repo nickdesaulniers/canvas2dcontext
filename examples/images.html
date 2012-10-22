@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+  <title>images.html</title>
+  <script>
+    /*
+    HTML5 Canvas is a immediate mode...
+    bit mapped...
+    */
+    function draw () {
+      var canvas = document.createElement('canvas'),
+      context = canvas.getContext('2d'),
+      bb = new Image(),
+      gc = new Image();
+      
+      canvas.width = 271;
+      canvas.height = 308;
+      
+      bb.addEventListener('load', loadGC);
+      gc.addEventListener('load', paint);
+      bb.src = '../images/bb.jpg';
+      document.body.appendChild(canvas);
+      
+      function loadGC () { gc.src = '../images/chrome.png' }
+      function paint () {
+        context.drawImage(bb, 0, 0);
+        context.drawImage(gc, 90, 77, 16, 16);
+        context.drawImage(gc, 175, 77, 16, 16);
+      }
+    }
+    
+    window.addEventListener('DOMContentLoaded', draw);
+  </script>
+</head>
+<body></body>
+</html>
