@@ -94,13 +94,13 @@
       context.strokeRect(rect.x, rect.y, rect.w, rect.h);
       // context.fillRect to fill instead of stroke
       
-      var x = rect.x + rect.w, y = rect.y + 5 * rect.h / 8;
       // Drawing polygons
       context.beginPath();
-      context.moveTo(x, y);
+      context.moveTo(rect.x + rect.w, rect.y + 5 * rect.h / 8);
       context.lineTo(600, 150);
       context.lineTo(600, 300);
-      context.lineTo(x, y);
+      // Instead of recalculating start point, context.closePath() will lineTo
+      // first point.
       context.closePath();
       context.stroke();
     }
