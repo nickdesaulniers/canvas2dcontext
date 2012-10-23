@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <title>4.transformations</title>
+  <script>
+    // Transformations can simplify calculations if you're drawing many things.
+    function draw () {
+      var canvas = document.createElement('canvas'),
+      context = canvas.getContext('2d');
+      
+      canvas.width = 900;
+      canvas.height = 500;
+      
+      original(context);
+      translate(context);
+      scale(context);
+      rotate(context);
+      mirror(context);
+      
+      document.body.appendChild(canvas);
+    }
+    function clean (context, func) {
+      if (typeof func === 'function') {
+        context.save();
+        func();
+        context.restore();
+      } else {
+        console.err('clean was not given a function');
+      }
+    }
+    function original (context) {
+      clean(context, function () {
+        context.fillStyle = 'red';
+        context.fillRect(0, 0, 50, 50);
+      });
+    }
+    function translate (context) {
+      clean(context, function () {
+        context.translate(50, 0);
+        context.fillStyle = 'orange';
+        context.fillRect(0, 0, 50, 50);
+      });
+    }
+    function scale (context) {
+      clean(context, function () {
+        context.scale(2.0, 1.5); // Rescale the coordinate system
+        context.fillStyle = 'yellow';
+        context.fillRect(50, 0, 50, 50);
+        /*
+        So 50 x 2.0 = 100 = x
+            0 x 1.5 = 0   = y
+           50 x 2.0 = 100 = w
+           50 x 1.5 = 150 = h
+        */ 
+      });
+    }
+    function rotate (context) {
+      clean(context, function () {
+        var angle = Math.PI / 4; // 45 degrees
+        context.rotate(angle); // Rotate the coordinate system
+        context.fillStyle = 'green';
+        context.fillRect(200, 0, 50, 50);
+      });
+    }
+    function mirror (context) {
+      clean(context, function () {
+        context.translate(context.canvas.width / 2, context.canvas.height / 2);
+        context.scale(-1, 1); // Horizontal mirroring, swap these for vertical
+        context.font = '40pt Calibri';
+        context.strokeStyle = 'blue';
+        context.strokeText('Hello World', 0, 0);
+      });
+    }
+    window.addEventListener('DOMContentLoaded', draw);
+    
+    /*
+    For more advanced transforms, you can use context.transform(a, b, c, d, e, f);
+    where:
+    
+    [x']   [a c e] [x]
+    |y'| = |b d f| |y|
+    [1]    [0 0 1] [1]
+    
+    It helps to know linear algebra ;)
+    */
+  </script>
+  <style>
+    canvas {
+      border: 1px solid #CCC;
+      box-shadow: 3px 5px 5px #CCC;
+    }
+  </style>
+</head>
+<body></body>
+</html>
