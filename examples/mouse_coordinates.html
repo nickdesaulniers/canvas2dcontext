@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <title>mouse_coordinates</title>
+  <script>
+    function movement (canvas, e) {
+      var context = canvas.getContext('2d'),
+      rect = canvas.getBoundingClientRect(),
+      x = e.clientX - rect.top - document.documentElement.scrollTop,
+      y = e.clientY - rect.left - document.documentElement.scrollLeft;
+      
+      // Clear previous render
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Horizontal
+      context.beginPath();
+      context.moveTo(0, y);
+      context.lineTo(canvas.width, y);
+      context.stroke();
+      
+      // Veritcal
+      context.beginPath();
+      context.moveTo(x, 0);
+      context.lineTo(x, canvas.height);
+      context.stroke();
+      
+      // Paint points
+      context.font = '14pt Helvetica';
+      context.fillText('(' + x + ', ' + y + ')', 10, 20);
+      
+      //console.log([x, y]);
+    }
+    function onload () {
+      var canvas = document.getElementById('canvas');
+      canvas.addEventListener('mousemove', function (e) {
+        movement(canvas, e);
+      });
+    }
+    window.addEventListener('DOMContentLoaded', onload);
+  </script>
+  <style>
+    canvas {
+      border: 1px solid #CCC;
+      box-shadow: 3px 5px 5px #CCC;
+    }
+  </style>
+</head>
+<body>
+  <canvas width="900" height="500" id="canvas">Better browser time!</canvas>
+</body>
+</html>
