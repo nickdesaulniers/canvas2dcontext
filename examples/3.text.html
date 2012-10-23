@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <title>3.text</title>
+  <script>
+    // Text is boring and doesn't have built in wrapping.
+    function write () {
+      var canvas = document.createElement('canvas'),
+      context = canvas.getContext('2d'),
+      text = 'Hello World',
+      x = 300,
+      y = 150;
+      
+      canvas.width = 600;
+      canvas.height = 300;
+      
+      context.font = 'italic 40px Georgia'; // crappy font support
+      context.fillStyle = 'blue';
+      context.strokeStyle = '#0F0';
+      context.lineWidth = 4; // lineWidth sets the width of the stroke
+      context.textAlign = 'center'; // the text is now horizontally centered on x
+      context.textBaseline = 'middle'; // the text is now vertically centered on y
+      
+      context.strokeText(text, x, y);
+      context.fillText(text, x, y);
+      
+      document.body.appendChild(canvas);
+    }
+    window.addEventListener('DOMContentLoaded', write);
+  </script>
+  <style>
+    canvas {
+      border: 1px solid #CCC;
+      box-shadow: 3px 5px 5px #CCC;
+    }
+  </style>
+</head>
+<body></body>
+</html>
