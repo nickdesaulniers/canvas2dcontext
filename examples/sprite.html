@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <title>sprite</title>
+  <script>
+    // This will lock up the browser.  Don't ever do this.
+    function evilAnimation () {
+      while (true) {
+        // Animation logic...
+      }
+    }
+    
+    /* We need to return controll to the main thread of the browser.
+       This still sucks because for long running callbacks, the iterval timer
+       will fire even if the callback is not finished. */
+    function crappyAnimation () {
+      // Animation logic...
+      setInterval(crappyAnimation, 1000 / 60);
+    }
+    
+    // This atleast waits until a long running callback is done, so no
+    // animations are dropped, but it's not running once ever 16.6ms.
+    function lessCrappyAnimation () {
+      // Animation logic...
+      setTimeOut(lessCrappyAnimation, 1000 / 60)
+    }
+    
+    // This compensates for long running callbacks, but if your callback takes
+    // longer than 16.6ms you will get an error!
+    function leastCrappyAnimation () {
+      var start = Date.now(),
+          finish;
+      // Animation logic...
+      finish = Date.now();
+      setTimeout(leastCrappyAnimation, (1000 / 60) - (finish - start));
+    }
+  
+    /*
+    So we can keep going down this rabbit hole trying to implement a perfect
+    animation loop.  Another issue we face is that setInterval and setInterval
+    are imprecise for animation loops.  If we set a timeout that's too fast for
+    the browser (<10ms), the browser may overrule this.  Luckily, the HTML5 spec
+    gives us requestAnimationFrame!  Instead of telling the browser when it
+    should draw the next frame, it will tell you.  Here is a simple polyfill
+    since requestAnimationFrame is not yet in all modern browsers.
+    http://caniuse.com/#feat=requestanimationframe
+    */
+    window.requestAnimationFrame =
+      window.requestAnimationFrame ||
+      window.mozRequestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.oRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      leastCrappyAnimation; // 1000 ms / 60 frames = 16.6 s/frame or 60 fps
+    
+    // requestAnimationFrame invokes the callback function with the time since epoch.
+    function animate (time) {
+      // Animation logic...
+      window.requestAnimationFrame(animate);
+    }
+    
+    function Sprite (imgSrc, frames, ctx) {
+      var self = this;
+      this.ready = false;
+      this.img = new Image();
+      this.img.addEventListener('load', function () {
+        self.ready = true;
+      });
+      this.img.src = imgSrc;
+      
+      // Frames will be a 2d array of points (x, w)
+      this.frames = frames;
+      this.currentFrame = 0;
+      this.totalFrames = frames.length;
+      this.frameToPaint = frames[this.currentFrame];
+      
+      this.context = ctx;
+      
+      this.lastUpdate = 0;
+      // Update frame every 100ms.
+      this.updateInterval = 100;
+    }
+    
+    Sprite.prototype = {
+      constructor: Sprite, // backreference, good practice for reflection
+      update: function (time) {
+        if (time > this.lastUpdate + this.updateInterval) {
+          if (++this.currentFrame === this.totalFrames) this.currentFrame = 0;
+          this.frameToPaint = this.frames[this.currentFrame];
+          this.lastUpdate = Date.now();
+        }
+      },
+      paint: function () {
+        var sx = this.frameToPaint[0],
+            sy = 0,
+            w  = this.frameToPaint[1],
+            h  = 76, // from the png
+            dx = 50,
+            dy = 50;
+            
+        // Reset background
+        this.context.clearRect(0, 0, this.context.canvas.width,
+          this.context.canvas.height);
+        this.context.fillStyle = 'red';
+        this.context.fillRect(0, 0, this.context.canvas.width,
+          this.context.canvas.height);
+        // Paint foreground
+        this.context.drawImage(this.img, sx, sy, w, h, dx, dy, w, h);
+      }
+    };
+    
+    function start () {
+      var imgSrc = '../images/rr.png',
+          frames = [
+            [10,  50],
+            [60,  50],
+            [110, 50],
+            [170, 60],
+            [230, 50],
+            [285, 50],
+            [340, 50],
+            [410, 50],
+            [475, 50],
+            [555, 50]
+          ],
+         context = document.getElementById('canvas').getContext('2d'),
+          sprite = new Sprite(imgSrc, frames, context),
+         animate = sprite.animate,
+        interval = setInterval(function () {
+          if (sprite.ready) {
+            clearInterval(interval);
+            window.requestAnimationFrame(function (time) {
+              sprite.update(time);
+              sprite.paint();
+              window.requestAnimationFrame(this);
+            });
+          }
+        }, 17);
+    }
+    window.addEventListener('DOMContentLoaded', start);
+  </script>
+  <style>
+    canvas {
+      border: 1px solid #CCC;
+      box-shadow: 3px 5px 5px #CCC;
+    }
+  </style>
+</head>
+<body>
+  <canvas width="500" height="400" id="canvas">No Canvas</canvas>
+</body>
+</html>
