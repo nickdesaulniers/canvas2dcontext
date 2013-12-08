@@ -94,21 +94,21 @@
       lastTime          = 0,
       lastFPSUpdateTime = 0,
       lastFPSUpdate     = 0;
-      
+
       var images = [];
       for (var i = 0; i < numDiscs; i++) {
         var image = new Image();
         image.src = discs[i].src;
         images.push(image);
       }
-      
+
       // ruled paper
       function drawBackground () {
         var    STEP_Y = 12,
            TOP_MARGIN = STEP_Y * 4,
           LEFT_MARGIN = STEP_Y * 3,
           i = context.canvas.height;
-        
+
         // Horizontal lines
         context.strokeStyle = 'lightgray';
         context.lineWidth   = 1;
@@ -119,7 +119,7 @@
           context.stroke();
           i -= STEP_Y;
         }
-        
+
         // Vertical line
         context.strokeStyle = 'rgba(100, 0, 0, 0.3)'
         context.lineWidth   = 1;
@@ -155,7 +155,7 @@
             2 * disc.radius);
         }
       }
-      
+
       function calcFPS () {
         var now = Date.now(),
             fps = 1000 / (now - lastTime);
@@ -173,19 +173,19 @@
           drawBackground();
           update();
           draw();
-          
+
           fps = calcFPS();
-          
+
           // once per second, update the frame rate
           if (Date.now() - lastFPSUpdateTime > 1000) {
             lastFPSUpdateTime = Date.now();
             lastFPSUpdate = fps;
           }
-          
+
           context.font = '48px Helvetica';
           context.fillStyle = 'cornflowerblue';
           context.fillText('fps: ' + lastFPSUpdate.toFixed(), 20, 60);
-          window.requestAnimationFrame(this);
+          window.requestAnimationFrame(animate);
         }
       }
 
