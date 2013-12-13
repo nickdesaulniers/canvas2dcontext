@@ -6,8 +6,8 @@
     function movement (canvas, e) {
       var context = canvas.getContext('2d'),
       rect = canvas.getBoundingClientRect(),
-      x = e.clientX - rect.top - document.documentElement.scrollTop,
-      y = e.clientY - rect.left - document.documentElement.scrollLeft;
+      x = e.clientX - rect.left,
+      y = e.clientY - rect.top;
       
       // Clear previous render
       context.clearRect(0, 0, canvas.width, canvas.height);
